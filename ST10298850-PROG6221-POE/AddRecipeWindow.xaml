@@ -1,0 +1,62 @@
+﻿<Window x:Class="RecipeApp.AddRecipeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add New Recipe" Height="500" Width="800">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Recipe Name -->
+        <Label Grid.Row="0" Grid.Column="0" Content="Recipe Name:" />
+        <TextBox x:Name="txtRecipeName" Grid.Row="0" Grid.Column="1" Margin="5" ToolTip="Enter the recipe name here"/>
+
+        <!-- Ingredient Name -->
+        <Label Grid.Row="1" Grid.Column="0" Content="Ingredient Name:" />
+        <TextBox x:Name="txtIngredientName" Grid.Row="1" Grid.Column="1" Margin="5" ToolTip="Enter the ingredient name"/>
+
+        <!-- Quantity -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Quantity:" />
+        <TextBox x:Name="txtIngredientQuantity" Grid.Row="2" Grid.Column="1" Margin="5" ToolTip="Enter the quantity"/>
+
+        <!-- Unit -->
+        <Label Grid.Row="3" Grid.Column="0" Content="Unit:" />
+        <TextBox x:Name="txtIngredientUnit" Grid.Row="3" Grid.Column="1" Margin="5" ToolTip="Enter the unit (e.g., grams, cups)"/>
+
+        <!-- Calories -->
+        <Label Grid.Row="4" Grid.Column="0" Content="Calories:" />
+        <TextBox x:Name="txtIngredientCalories" Grid.Row="4" Grid.Column="1" Margin="5" ToolTip="Enter the calorie count"/>
+
+        <!-- Food Group -->
+        <Label Grid.Row="5" Grid.Column="0" Content="Food Group:" />
+        <ComboBox x:Name="cmbFoodGroup" Grid.Row="5" Grid.Column="1" Margin="5">
+            <ComboBoxItem Content="Fruits"/>
+            <ComboBoxItem Content="Vegetables"/>
+            <ComboBoxItem Content="Grains"/>
+            <ComboBoxItem Content="Protein"/>
+            <ComboBoxItem Content="Dairy"/>
+        </ComboBox>
+
+        <!-- Ingredients List -->
+        <Label Grid.Row="6" Grid.Column="0" Content="Ingredients:"/>
+        <ListBox x:Name="lstIngredients" Grid.Row="6" Grid.Column="1" Margin="5" Height="100"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <Button Name="btnAddIngredient" Content="Add Ingredient" Click="btnAddIngredient_Click" Margin="5"/>
+            <Button Name="btnSaveRecipe" Content="Save Recipe" Click="btnSaveRecipe_Click" Margin="5"/>
+            <Button Name="btnCancel" Content="Close Without Saving" Click="btnCancel_Click" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
