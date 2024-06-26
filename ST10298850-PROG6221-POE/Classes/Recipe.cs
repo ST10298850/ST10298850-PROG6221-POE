@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace ST10298850_PROG6221_POE.Classes
 {
@@ -14,16 +17,13 @@ namespace ST10298850_PROG6221_POE.Classes
             Name = name;
             Ingredients = ingredients;
             Steps = steps;
-        }
-
-        public override string ToString()
-        {
-            return Name;
+            CheckCalories();
         }
 
         public void AddIngredient(RecipeIngredient ingredient)
         {
             Ingredients.Add(ingredient);
+            CheckCalories();
         }
 
         public void AddStep(string step)
@@ -31,38 +31,40 @@ namespace ST10298850_PROG6221_POE.Classes
             Steps.Add(step);
         }
 
-        public void UpdateScale(double scale)
-        {
-            scaleAmount = scale;
-            foreach (var ingredient in Ingredients)
-            {
-                ingredient.Quantity = ingredient.OriginalQuantity * scaleAmount;
-            }
-        }
-
-        // Method to scale the recipe
         public void ScaleRecipe(double scaleFactor)
         {
+            scaleAmount *= scaleFactor;
             foreach (var ingredient in Ingredients)
             {
                 ingredient.Scale(scaleFactor);
             }
+            CheckCalories(); // This will trigger the calorie check and potentially the ExceededCalories event if implemented.
+                             // Consider adding a method call here to explicitly update any UI or data bindings that display the total calories, if necessary.
         }
 
         public void ResetScale()
         {
+            scaleAmount = 1;
             foreach (var ingredient in Ingredients)
             {
                 ingredient.ResetQuantity();
             }
-            scaleAmount = 1;
+            CheckCalories();
         }
 
+        private void CheckCalories()
+        {
+            if (CalculateTotalCalories() > 300) // Assuming 300 is the threshold
+            {
+                ExceededCalories?.Invoke(this, new EventArgs());
+            }
+        }
+
+        // Adjusted to calculate total calories without considering quantity
         public double CalculateTotalCalories()
         {
-            return Ingredients.Sum(ingredient => ingredient.Calories * ingredient.Quantity);
+            return Ingredients.Sum(ingredient => ingredient.Calories);
         }
-
 
         public string Display()
         {
@@ -75,13 +77,15 @@ namespace ST10298850_PROG6221_POE.Classes
                 sb.AppendLine($"- {ingredient}");
             }
             sb.AppendLine("Steps:");
-            foreach (var step in Steps)
+            for (int i = 0; i < Steps.Count; i++)
             {
-                sb.AppendLine($"- {step}");
+                sb.AppendLine($"{i + 1}. {Steps[i]}");
             }
-            sb.AppendLine($"Total Calories: {CalculateTotalCalories()}");
+            sb.AppendLine($"Total Calories: {CalculateTotalCalories()}"); // Display total calories
             sb.AppendLine();
             return sb.ToString();
         }
+
+        public event EventHandler? ExceededCalories;
     }
 }

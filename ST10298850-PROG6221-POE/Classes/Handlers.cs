@@ -8,5 +8,7 @@ using System;
 
 namespace ST10298850_PROG6221_POE.Classes
 {
-    public delegate void ExceededCaloriesHandler(string message);
+    
+    public delegate void ExceededCaloriesHandler(double totalCalories);
+
 }

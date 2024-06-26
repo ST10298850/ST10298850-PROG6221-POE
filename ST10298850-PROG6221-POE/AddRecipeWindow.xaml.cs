@@ -9,6 +9,7 @@ namespace RecipeApp
     {
         public Recipe? NewRecipe { get; private set; }
         private List<RecipeIngredient> ingredients = new List<RecipeIngredient>();
+        private List<string> steps = new List<string>();
 
         public AddRecipeWindow()
         {
@@ -17,43 +18,73 @@ namespace RecipeApp
 
         private void btnAddIngredient_Click(object sender, RoutedEventArgs e)
         {
-            string ingredientName = txtIngredientName.Text;
-            double.TryParse(txtIngredientQuantity.Text, out double ingredientQuantity);
-            string ingredientUnit = txtIngredientUnit.Text;
-            double.TryParse(txtIngredientCalories.Text, out double ingredientCalories);
-            string foodGroup = ((ComboBoxItem)cmbFoodGroup.SelectedItem)?.Content?.ToString() ?? string.Empty;
+            // Assuming you have TextBoxes for ingredient name, quantity, calories, and a ComboBox for food group
+            var name = txtIngredientName.Text;
+            var quantityText = txtIngredientQuantity.Text;
+            var caloriesText = txtIngredientCalories.Text;
+            var unit = txtIngredientUnit.Text; // Assuming you have a TextBox for unit
+            var foodGroup = cmbFoodGroup.SelectedItem as ComboBoxItem; // Assuming you have a ComboBox for food group
 
-            if (!string.IsNullOrEmpty(ingredientName) && ingredientQuantity > 0 && !string.IsNullOrEmpty(ingredientUnit) && ingredientCalories > 0 && !string.IsNullOrEmpty(foodGroup))
+            if (!string.IsNullOrWhiteSpace(name) &&
+                double.TryParse(quantityText, out double quantity) &&
+                double.TryParse(caloriesText, out double calories) &&
+                !string.IsNullOrWhiteSpace(unit) &&
+                foodGroup != null)
             {
-                var ingredient = new RecipeIngredient(ingredientName, ingredientQuantity, ingredientUnit, ingredientCalories, foodGroup);
+                var ingredient = new RecipeIngredient(name, quantity, unit, calories, foodGroup.Content.ToString());
                 ingredients.Add(ingredient);
-
-                lstIngredients.Items.Add($"{ingredientName} - {ingredientQuantity} {ingredientUnit} ({ingredientCalories} calories) [{foodGroup}]");
+                lstIngredients.Items.Add(ingredient.ToString()); // Assuming you have a ListBox named lstIngredients
+                ClearIngredientInputs();
             }
             else
             {
-                MessageBox.Show("Please fill in all ingredient fields correctly.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please fill in all fields correctly.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnSaveRecipe_Click(object sender, RoutedEventArgs e)
         {
             string recipeName = txtRecipeName.Text;
-            if (!string.IsNullOrEmpty(recipeName) && ingredients.Count > 0)
+            if (!string.IsNullOrEmpty(recipeName) && ingredients.Count > 0 && steps.Count > 0)
             {
-                NewRecipe = new Recipe(recipeName, ingredients, new List<string>());
+                NewRecipe = new Recipe(recipeName, ingredients, steps);
                 MessageBox.Show($"Recipe '{recipeName}' saved!", "Recipe Saved", MessageBoxButton.OK, MessageBoxImage.Information);
-                DialogResult = true; // Close the window and return true
+                DialogResult = true;
             }
             else
             {
-                MessageBox.Show("Please enter a recipe name and add at least one ingredient.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please enter a recipe name, add at least one ingredient, and add at least one step.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false; // Close the window and return false
+            DialogResult = false;
+        }
+
+        private void btnAddStep_Click(object sender, RoutedEventArgs e)
+        {
+            var step = txtStep.Text; // Assuming you have a TextBox named txtStep for the step description
+            if (!string.IsNullOrWhiteSpace(step))
+            {
+                steps.Add(step);
+                lstSteps.Items.Add(step); // Assuming you have a ListBox named lstSteps
+                txtStep.Clear(); // Clear the step input field after adding
+            }
+            else
+            {
+                MessageBox.Show("Please enter a step.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ClearIngredientInputs()
+        {
+            // Clear the ingredient input fields after adding
+            txtIngredientName.Clear();
+            txtIngredientQuantity.Clear();
+            txtIngredientCalories.Clear();
+            txtIngredientUnit.Clear();
+            cmbFoodGroup.SelectedIndex = -1; // Reset the ComboBox selection
         }
     }
 }
