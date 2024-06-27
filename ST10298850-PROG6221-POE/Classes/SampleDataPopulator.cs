@@ -99,5 +99,6 @@ namespace RecipeApp
 
             // Additional sample recipes can be added here following the same pattern
         }
+
     }
 }

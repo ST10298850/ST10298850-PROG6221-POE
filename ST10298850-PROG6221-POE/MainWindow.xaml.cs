@@ -21,6 +21,7 @@ namespace RecipeApp
             InitializeComponent();
             cmbRecipes.ItemsSource = recipes; // Bind the ItemsSource of the ComboBox
             SampleDataPopulator.PopulateSampleData(recipes); // Populate sample data
+            RefreshAndSortRecipes();
             foreach (var recipe in recipes)
             {
                 recipe.CaloriesNotification += Recipe_CaloriesNotification;
@@ -30,6 +31,7 @@ namespace RecipeApp
             txtFilterIngredient.Foreground = new SolidColorBrush(Colors.Gray);
             txtFilterMaxCalories.Text = "Max Calories";
             txtFilterMaxCalories.Foreground = new SolidColorBrush(Colors.Gray);
+            
         }
         // Event handler for the CaloriesNotification event
         private void Recipe_CaloriesNotification(object sender, CaloriesEventArgs e)
@@ -62,7 +64,7 @@ namespace RecipeApp
             txtOutput.Text = recipe.Display();
         }
 
-        private void AddRecipeWindow_ExceededCalories(object sender, CaloriesEventArgs e)
+        private void AddRecipeWindow_ExceededCalories(object? sender, CaloriesEventArgs e)
         {
             MessageBox.Show(e.Message, "Calorie Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -76,10 +78,20 @@ namespace RecipeApp
             {
                 addRecipeWindow.NewRecipe.ExceededCalories += AddRecipeWindow_ExceededCalories;
                 recipes.Add(addRecipeWindow.NewRecipe);
+                RefreshAndSortRecipes();
                 CheckCalories(addRecipeWindow.NewRecipe); // Check if the new recipe exceeds calorie limit
+                //addRecipeWindow.NewRecipe.DisplayCalorieInformation(); // Display calorie information
             }
         }
-
+        private void cmbRecipes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbRecipes.SelectedItem is Recipe selectedRecipe)
+            {
+                string calorieMessage = selectedRecipe.GetCalorieMessage();
+                MessageBox.Show(calorieMessage, "Calorie Information");
+                RefreshUI(selectedRecipe); // Update UI with the selected recipe
+            }
+        }
         private void btnDisplayRecipes_Click(object sender, RoutedEventArgs e)
         {
             DisplayAllRecipes();
@@ -121,13 +133,6 @@ namespace RecipeApp
             DisplayAllRecipes();
         }
 
-        private void cmbRecipes_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cmbRecipes.SelectedItem is Recipe selectedRecipe)
-            {
-                txtOutput.Text = selectedRecipe.Display();
-            }
-        }
 
         private void btnFilterRecipes_Click(object sender, RoutedEventArgs e)
         {
@@ -169,7 +174,9 @@ namespace RecipeApp
             }
         }
 
-        private void btnViewSteps_Click(object sender, RoutedEventArgs e)
+    
+
+    private void btnViewSteps_Click(object sender, RoutedEventArgs e)
         {
             if (cmbRecipes.SelectedItem is Recipe selectedRecipe)
             {
@@ -232,6 +239,23 @@ namespace RecipeApp
         {
             string foodGroupsInfo = GetFoodGroupsInfo();
             txtOutput.Text = foodGroupsInfo;
+        }
+        private void RefreshAndSortRecipes()
+        {
+            // Sort the recipes list alphabetically by Name
+            var sortedRecipes = new ObservableCollection<Recipe>(recipes.OrderBy(r => r.Name));
+
+            // Reassign the sorted list back to the recipes ObservableCollection
+            recipes = sortedRecipes;
+
+            // Rebind the sorted recipes to the combo box
+            cmbRecipes.ItemsSource = recipes;
+
+            // Do not auto-select the first item in the combo box
+            // if (cmbRecipes.Items.Count > 0)
+            // {
+            //     cmbRecipes.SelectedIndex = 0;
+            // }
         }
 
         private string GetFoodGroupsInfo()

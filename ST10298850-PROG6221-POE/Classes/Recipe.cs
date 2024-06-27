@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace ST10298850_PROG6221_POE.Classes
 {
@@ -19,14 +20,14 @@ namespace ST10298850_PROG6221_POE.Classes
             Name = name;
             Ingredients = ingredients;
             Steps = steps;
-            CheckCalories();
+            TriggerCalorieCheck();
         }
 
         // Methods
         public void AddIngredient(RecipeIngredient ingredient)
         {
             Ingredients.Add(ingredient);
-            CheckCalories();
+            TriggerCalorieCheck();
         }
 
         public void AddStep(string step)
@@ -46,7 +47,7 @@ namespace ST10298850_PROG6221_POE.Classes
             {
                 ingredient.Scale(scaleFactor);
             }
-            CheckCalories();
+            TriggerCalorieCheck();
         }
 
         public void ResetScale()
@@ -56,8 +57,9 @@ namespace ST10298850_PROG6221_POE.Classes
             {
                 ingredient.ResetQuantity();
             }
-            CheckCalories();
+
         }
+        public event EventHandler<CaloriesEventArgs>? ExceededCalories;
 
         public event CaloriesNotificationHandler CaloriesNotification;
 
@@ -66,25 +68,35 @@ namespace ST10298850_PROG6221_POE.Classes
             CaloriesNotification?.Invoke(this, e);
         }
 
-        public void CheckCalories()
+        private void TriggerCalorieCheck()
+        {
+            string message = GetCalorieMessage();
+            OnCaloriesNotification(new CaloriesEventArgs(message));
+
+        }
+        public string GetCalorieMessage()
         {
             double totalCalories = CalculateTotalCalories();
-            if (totalCalories < 100) // Assuming 100 is the threshold for "too low"
+            if (totalCalories < 200)
             {
-                OnCaloriesNotification(new CaloriesEventArgs("Calories too low"));
+                return "This recipe is low in calories, suitable for a snack.";
             }
-            else if (totalCalories > 300)
+            else if (totalCalories >= 200 && totalCalories <= 500)
             {
-                OnCaloriesNotification(new CaloriesEventArgs("Calories exceed 300"));
+                return "This recipe has moderate calories, suitable for a balanced meal.";
+            }
+            else
+            {
+                return "This recipe is high in calories and should be consumed sparingly.";
             }
         }
-
 
         public double CalculateTotalCalories()
         {
-            // Adjusted to calculate total calories considering the scaleAmount
-            return Ingredients.Sum(ingredient => ingredient.Calories * ingredient.Quantity / ingredient.OriginalQuantity);
+            return Ingredients.Sum(ingredient => ingredient.Calories * (ingredient.Quantity / ingredient.OriginalQuantity));
         }
+
+
 
         public string Display()
         {
@@ -105,9 +117,7 @@ namespace ST10298850_PROG6221_POE.Classes
             sb.AppendLine();
             return sb.ToString();
         }
-
-        // Update the event handler to use CaloriesEventArgs, which will include the message
-        public event EventHandler<CaloriesEventArgs>? ExceededCalories;
+        //            return Ingredients.Sum(ingredient => ingredient.Calories * ingredient.Quantity / ingredient.OriginalQuantity);
 
 
         // Define CaloriesEventArgs to pass messages
@@ -123,3 +133,43 @@ namespace ST10298850_PROG6221_POE.Classes
     }
 
 }
+
+//----------------------------------------------------------------------------------------REFERENCES--------------------------------------------------------------------------------------------
+//C# Tutorial (C Sharp). (n.d.). Retrieved May 27, 2024, from https://www.w3schools.com/cs/index.php 
+
+//Chand, M. (2023, April 2). How to create a list in C#? Retrieved May 28, 2024, from https://www.c-sharpcorner.com/UploadFile/mahesh/create-a-list-in-C-Sharp/
+
+//Sort a list alphabetically. (2021, February). Stack Overflow. Retrieved May 29, 2024, from https://stackoverflow.com/questions/6965337/sort-a-list-alphabetically
+
+//----------------------------------------------------------------------------------------REFERENCES--------------------------------------------------------------------------------------------
+
+//public void DisplayCalorieInformation()
+//{
+//    var sb = new StringBuilder();
+//    sb.AppendLine("Calorie Information:");
+//    sb.AppendLine("- Less than 200 calories: Suitable for a snack.");
+//    sb.AppendLine("- Between 200 and 500 calories: Suitable for a balanced meal.");
+//    sb.AppendLine("- More than 500 calories: Should be consumed sparingly.");
+//    MessageBox.Show(sb.ToString(), "Calorie Information", MessageBoxButton.OK, MessageBoxImage.Information);
+//}
+
+//private void CheckCalories()
+//{
+//    var totalCalories = CalculateTotalCalories();
+//    string message = "";
+
+//    if (totalCalories < 200)
+//    {
+//        message = "This recipe is low in calories, suitable for a snack.";
+//    }
+//    else if (totalCalories >= 200 && totalCalories <= 500)
+//    {
+//        message = "This recipe has moderate calories, suitable for a balanced meal.";
+//    }
+//    else if (totalCalories > 500)
+//    {
+//        message = "This recipe is high in calories and should be consumed sparingly.";
+//    }
+
+//    MessageBox.Show(message, "Calorie Notification", MessageBoxButton.OK, MessageBoxImage.Information);
+//}

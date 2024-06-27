@@ -53,11 +53,13 @@
         <!-- Food Group -->
         <Label Grid.Row="5" Grid.Column="0" Content="Food Group:" />
         <ComboBox x:Name="cmbFoodGroup" Grid.Row="5" Grid.Column="1" Margin="5">
-            <ComboBoxItem Content="Fruits"/>
-            <ComboBoxItem Content="Vegetables"/>
-            <ComboBoxItem Content="Grains"/>
-            <ComboBoxItem Content="Protein"/>
-            <ComboBoxItem Content="Dairy"/>
+            <ComboBoxItem Content="Starchy foods"/>
+            <ComboBoxItem Content="Vegetables and fruits"/>
+            <ComboBoxItem Content="Dry beans, peas, lentils and soya"/>
+            <ComboBoxItem Content="Chicken, fish, meat and eggs"/>
+            <ComboBoxItem Content="Milk and dairy products"/>
+            <ComboBoxItem Content="Fats and oils"/>
+            <ComboBoxItem Content="Water"/>
         </ComboBox>
 
         <!-- Ingredients List -->
