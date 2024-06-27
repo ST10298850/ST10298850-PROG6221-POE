@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ST10298850_PROG6221_POE;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
 
 namespace ST10298850_PROG6221_POE.Classes
 {
@@ -141,6 +143,11 @@ namespace ST10298850_PROG6221_POE.Classes
 
 //Sort a list alphabetically. (2021, February). Stack Overflow. Retrieved May 29, 2024, from https://stackoverflow.com/questions/6965337/sort-a-list-alphabetically
 
+//----------------------------------------------------------------------------------------New References--------------------------------------------------------------------------------------------
+
+//Adegeo. (2023, July 5).Create a new app with Visual Studio tutorial - WPF .NET. Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/desktop/wpf/get-started/create-app-visual-studio?view=netdesktop-8.0
+
+//Welcome - The complete WPF tutorial. (n.d.). https://wpf-tutorial.com/
 //----------------------------------------------------------------------------------------REFERENCES--------------------------------------------------------------------------------------------
 
 //public void DisplayCalorieInformation()
