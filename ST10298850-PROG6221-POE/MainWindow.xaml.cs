@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using ST10298850_PROG6221_POE;
 using ST10298850_PROG6221_POE.Classes;
+using static ST10298850_PROG6221_POE.Classes.Recipe;
 
 namespace RecipeApp
 {
@@ -18,15 +20,22 @@ namespace RecipeApp
         {
             InitializeComponent();
             cmbRecipes.ItemsSource = recipes; // Bind the ItemsSource of the ComboBox
-            PopulateSampleData(); // Populate sample data
-
+            SampleDataPopulator.PopulateSampleData(recipes); // Populate sample data
+            foreach (var recipe in recipes)
+            {
+                recipe.CaloriesNotification += Recipe_CaloriesNotification;
+            }
             // Initialize placeholders
             txtFilterIngredient.Text = "Ingredient Name";
             txtFilterIngredient.Foreground = new SolidColorBrush(Colors.Gray);
             txtFilterMaxCalories.Text = "Max Calories";
             txtFilterMaxCalories.Foreground = new SolidColorBrush(Colors.Gray);
         }
-
+        // Event handler for the CaloriesNotification event
+        private void Recipe_CaloriesNotification(object sender, CaloriesEventArgs e)
+        {
+            MessageBox.Show(e.Message); // Displaying the message in a simple MessageBox
+        }
         private void btnScaleRecipe_Click(object sender, RoutedEventArgs e)
         {
             if (cmbRecipes.SelectedItem is Recipe selectedRecipe && cmbScaleFactor.SelectedItem is ComboBoxItem selectedScaleFactorItem)
@@ -53,10 +62,11 @@ namespace RecipeApp
             txtOutput.Text = recipe.Display();
         }
 
-        private void AddRecipeWindow_ExceededCalories(object sender, EventArgs e)
+        private void AddRecipeWindow_ExceededCalories(object sender, CaloriesEventArgs e)
         {
-            MessageBox.Show($"The total calories of this recipe exceed the limit.", "Calories Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(e.Message, "Calorie Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
 
         private void btnAddRecipe_Click(object sender, RoutedEventArgs e)
         {
@@ -68,48 +78,6 @@ namespace RecipeApp
                 recipes.Add(addRecipeWindow.NewRecipe);
                 CheckCalories(addRecipeWindow.NewRecipe); // Check if the new recipe exceeds calorie limit
             }
-        }
-
-        private void PopulateSampleData()
-        {
-            // Sample ingredients for a recipe
-            var ingredients1 = new List<RecipeIngredient>
-            {
-                new RecipeIngredient("Flour", 2, "cups", 100, "Grains"),
-                new RecipeIngredient("Sugar", 1, "cups", 150, "Sweets"),
-                new RecipeIngredient("Eggs", 2, "pieces", 70, "Protein")
-            };
-
-            // Sample steps for a recipe
-            var steps1 = new List<string>
-            {
-                "Mix all ingredients",
-                "Bake for 30 minutes at 350 degrees"
-            };
-
-            // Create a sample recipe and add it to the recipes collection
-            var recipe1 = new Recipe("Cake", ingredients1, steps1);
-            recipes.Add(recipe1);
-
-            // Example for another recipe
-            var ingredients2 = new List<RecipeIngredient>
-            {
-                new RecipeIngredient("Tomato", 3, "pieces", 20, "Vegetables"),
-                new RecipeIngredient("Cheese", 1, "cups", 200, "Dairy"),
-                new RecipeIngredient("Basil", 5, "leaves", 5, "Herbs")
-            };
-
-            var steps2 = new List<string>
-            {
-                "Slice tomatoes and cheese",
-                "Layer tomatoes, cheese, and basil",
-                "Serve fresh"
-            };
-
-            var recipe2 = new Recipe("Caprese Salad", ingredients2, steps2);
-            recipes.Add(recipe2);
-
-            // No need to manually add items to cmbRecipes since it's bound to the recipes collection
         }
 
         private void btnDisplayRecipes_Click(object sender, RoutedEventArgs e)
@@ -259,6 +227,51 @@ namespace RecipeApp
             {
                 MessageBox.Show($"The total calories of {recipe.Name} exceed the limit of {calorieLimit} calories.", "Calories Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+        }
+        private void btnPrintFoodGroups_Click(object sender, RoutedEventArgs e)
+        {
+            string foodGroupsInfo = GetFoodGroupsInfo();
+            txtOutput.Text = foodGroupsInfo;
+        }
+
+        private string GetFoodGroupsInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Food Groups and Examples:");
+            sb.AppendLine("1. Starchy foods:");
+            sb.AppendLine("   - Examples: Pap, Samp, Brown rice, Potatoes, Whole wheat bread, Whole wheat pasta");
+            sb.AppendLine();
+            sb.AppendLine("2. Vegetables and fruits:");
+            sb.AppendLine("   - Examples: Apple, Pear, Peach, Orange, Mango, Cabbage, Pumpkin, Carrots, Spinach, Broccoli, Cauliflower, Tomato");
+            sb.AppendLine();
+            sb.AppendLine("3. Dry beans, peas, lentils and soya:");
+            sb.AppendLine("   - Examples: Chickpeas, Kidney beans, Green peas, Black beans, Soy beans, Split peas");
+            sb.AppendLine();
+            sb.AppendLine("4. Chicken, fish, meat and eggs:");
+            sb.AppendLine("   - Examples: Skinless chicken, Lean meat, Mince, Canned fish, Frozen fish, Eggs");
+            sb.AppendLine();
+            sb.AppendLine("5. Milk and dairy products:");
+            sb.AppendLine("   - Examples: Low fat milk, Cottage cheese, Plain yoghurt, Amasi");
+            sb.AppendLine();
+            sb.AppendLine("6. Fats and oils:");
+            sb.AppendLine("   - Examples: Avocado, Olive oil, Nuts and seeds, Flax seed");
+            sb.AppendLine();
+            sb.AppendLine("7. Water:");
+            sb.AppendLine("   - Aim to drink 6 to 8 glasses of water each day to help keep your body hydrated.");
+            return sb.ToString();
+        }
+        // MainWindow.xaml.cs
+
+        private void btnFoodGroupInfo_Click(object sender, RoutedEventArgs e)
+        {
+            string info = "Food Groups and Calories:\n" +
+                          "- Fruits and Vegetables: low in calories, high in vitamins.\n" +
+                          "- Grains: good source of energy and fiber.\n" +
+                          "- Protein Foods: essential for body repair and growth.\n" +
+                          "- Dairy: important for calcium and vitamin D.\n\n" +
+                          "Calories are a measure of energy. Low-calorie meals are suitable for snacks, " +
+                          "moderate-calorie meals for balanced meals, and high-calorie meals should be consumed sparingly.";
+            MessageBox.Show(info, "Food Group and Calorie Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

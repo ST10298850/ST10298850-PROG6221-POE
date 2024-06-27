@@ -59,13 +59,26 @@ namespace ST10298850_PROG6221_POE.Classes
             CheckCalories();
         }
 
-        private void CheckCalories()
+        public event CaloriesNotificationHandler CaloriesNotification;
+
+        protected virtual void OnCaloriesNotification(CaloriesEventArgs e)
         {
-            if (CalculateTotalCalories() > 300) // Assuming 300 is the threshold
+            CaloriesNotification?.Invoke(this, e);
+        }
+
+        public void CheckCalories()
+        {
+            double totalCalories = CalculateTotalCalories();
+            if (totalCalories < 100) // Assuming 100 is the threshold for "too low"
             {
-                ExceededCalories?.Invoke(this, new EventArgs());
+                OnCaloriesNotification(new CaloriesEventArgs("Calories too low"));
+            }
+            else if (totalCalories > 300)
+            {
+                OnCaloriesNotification(new CaloriesEventArgs("Calories exceed 300"));
             }
         }
+
 
         public double CalculateTotalCalories()
         {
@@ -93,7 +106,20 @@ namespace ST10298850_PROG6221_POE.Classes
             return sb.ToString();
         }
 
-        public event EventHandler? ExceededCalories;
+        // Update the event handler to use CaloriesEventArgs, which will include the message
+        public event EventHandler<CaloriesEventArgs>? ExceededCalories;
+
+
+        // Define CaloriesEventArgs to pass messages
+        public class CaloriesEventArgs : EventArgs
+        {
+            public string Message { get; }
+
+            public CaloriesEventArgs(string message)
+            {
+                Message = message;
+            }
+        }
     }
 
 }

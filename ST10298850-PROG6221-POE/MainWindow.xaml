@@ -34,11 +34,14 @@
                     Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
             <TextBox Name="txtFilterIngredient" Width="200" Margin="5" ToolTip="Filter by Ingredient Name" GotFocus="txtFilterIngredient_GotFocus" LostFocus="txtFilterIngredient_LostFocus"/>
             <ComboBox Name="cmbFilterFoodGroup" Width="200" Margin="5" ToolTip="Filter by Food Group">
-                <ComboBoxItem Content="Fruits"/>
-                <ComboBoxItem Content="Vegetables"/>
-                <ComboBoxItem Content="Grains"/>
-                <ComboBoxItem Content="Protein Foods"/>
-                <ComboBoxItem Content="Dairy"/>
+                <ComboBoxItem Content="Starchy foods"/>
+                <ComboBoxItem Content="Vegetables and fruits"/>
+                <ComboBoxItem Content="Dry beans, peas, lentils and soya"/>
+                <ComboBoxItem Content="Chicken, fish, meat and eggs"/>
+                <ComboBoxItem Content="Milk and dairy products"/>
+                <ComboBoxItem Content="Fats and oils"/>
+                <ComboBoxItem Content="Water"/>
+
             </ComboBox>
             <TextBox Name="txtFilterMaxCalories" Width="200" Margin="5" ToolTip="Filter by Maximum Calories" GotFocus="txtFilterMaxCalories_GotFocus" LostFocus="txtFilterMaxCalories_LostFocus"/>
             <Button Name="btnFilterRecipes" Content="Filter" Click="btnFilterRecipes_Click" 
@@ -46,6 +49,11 @@
             <Button Name="btnViewSteps" Content="View Steps" Click="btnViewSteps_Click" Margin="5"
         Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
             <Button Name="btnClearFilters" Content="Clear Filters" Click="btnClearFilters_Click" 
+        Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40" Margin="5"/>
+            <Button Name="btnPrintFoodGroups" Content="Print Food Groups Info" Click="btnPrintFoodGroups_Click" 
+        Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40" Margin="5"/>
+            <!-- MainWindow.xaml -->
+            <Button Name="btnFoodGroupInfo" Content="Food Group Info" Click="btnFoodGroupInfo_Click" 
         Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40" Margin="5"/>
 
         </StackPanel>
