@@ -7,11 +7,13 @@ namespace ST10298850_PROG6221_POE.Classes
 {
     public class Recipe
     {
+        // Properties
         public string Name { get; set; }
         public List<RecipeIngredient> Ingredients { get; set; }
         public List<string> Steps { get; set; }
         private double scaleAmount = 1;
 
+        // Constructor
         public Recipe(string name, List<RecipeIngredient> ingredients, List<string> steps)
         {
             Name = name;
@@ -20,6 +22,7 @@ namespace ST10298850_PROG6221_POE.Classes
             CheckCalories();
         }
 
+        // Methods
         public void AddIngredient(RecipeIngredient ingredient)
         {
             Ingredients.Add(ingredient);
@@ -30,10 +33,12 @@ namespace ST10298850_PROG6221_POE.Classes
         {
             Steps.Add(step);
         }
+
         public override string ToString()
         {
             return Name;
         }
+
         public void ScaleRecipe(double scaleFactor)
         {
             scaleAmount *= scaleFactor;
@@ -65,7 +70,7 @@ namespace ST10298850_PROG6221_POE.Classes
         public double CalculateTotalCalories()
         {
             // Adjusted to calculate total calories considering the scaleAmount
-            return Ingredients.Sum(ingredient => ingredient.Calories * scaleAmount);
+            return Ingredients.Sum(ingredient => ingredient.Calories * ingredient.Quantity / ingredient.OriginalQuantity);
         }
 
         public string Display()
@@ -89,6 +94,6 @@ namespace ST10298850_PROG6221_POE.Classes
         }
 
         public event EventHandler? ExceededCalories;
-
     }
+
 }

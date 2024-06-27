@@ -17,7 +17,6 @@ namespace RecipeApp
         public MainWindow()
         {
             InitializeComponent();
-            recipes = new ObservableCollection<Recipe>();
             cmbRecipes.ItemsSource = recipes; // Bind the ItemsSource of the ComboBox
             PopulateSampleData(); // Populate sample data
 
@@ -70,22 +69,23 @@ namespace RecipeApp
                 CheckCalories(addRecipeWindow.NewRecipe); // Check if the new recipe exceeds calorie limit
             }
         }
+
         private void PopulateSampleData()
         {
             // Sample ingredients for a recipe
             var ingredients1 = new List<RecipeIngredient>
-    {
-        new RecipeIngredient("Flour", 2, "cups", 100, "Grains"),
-        new RecipeIngredient("Sugar", 1, "cups", 150, "Sweets"),
-        new RecipeIngredient("Eggs", 2, "pieces", 70, "Protein")
-    };
+            {
+                new RecipeIngredient("Flour", 2, "cups", 100, "Grains"),
+                new RecipeIngredient("Sugar", 1, "cups", 150, "Sweets"),
+                new RecipeIngredient("Eggs", 2, "pieces", 70, "Protein")
+            };
 
             // Sample steps for a recipe
             var steps1 = new List<string>
-    {
-        "Mix all ingredients",
-        "Bake for 30 minutes at 350 degrees"
-    };
+            {
+                "Mix all ingredients",
+                "Bake for 30 minutes at 350 degrees"
+            };
 
             // Create a sample recipe and add it to the recipes collection
             var recipe1 = new Recipe("Cake", ingredients1, steps1);
@@ -93,25 +93,24 @@ namespace RecipeApp
 
             // Example for another recipe
             var ingredients2 = new List<RecipeIngredient>
-    {
-        new RecipeIngredient("Tomato", 3, "pieces", 20, "Vegetables"),
-        new RecipeIngredient("Cheese", 1, "cups", 200, "Dairy"),
-        new RecipeIngredient("Basil", 5, "leaves", 5, "Herbs")
-    };
+            {
+                new RecipeIngredient("Tomato", 3, "pieces", 20, "Vegetables"),
+                new RecipeIngredient("Cheese", 1, "cups", 200, "Dairy"),
+                new RecipeIngredient("Basil", 5, "leaves", 5, "Herbs")
+            };
 
             var steps2 = new List<string>
-    {
-        "Slice tomatoes and cheese",
-        "Layer tomatoes, cheese, and basil",
-        "Serve fresh"
-    };
+            {
+                "Slice tomatoes and cheese",
+                "Layer tomatoes, cheese, and basil",
+                "Serve fresh"
+            };
 
             var recipe2 = new Recipe("Caprese Salad", ingredients2, steps2);
             recipes.Add(recipe2);
 
             // No need to manually add items to cmbRecipes since it's bound to the recipes collection
         }
-
 
         private void btnDisplayRecipes_Click(object sender, RoutedEventArgs e)
         {
@@ -126,6 +125,7 @@ namespace RecipeApp
                 txtOutput.Text += recipe.Display() + Environment.NewLine;
             }
         }
+
         private void btnClearFilters_Click(object sender, RoutedEventArgs e)
         {
             // Clear filter inputs
@@ -143,7 +143,6 @@ namespace RecipeApp
             // Display all recipes in the output TextBox
             DisplayAllRecipes();
         }
-
 
         private void btnResetScale_Click(object sender, RoutedEventArgs e)
         {
@@ -164,7 +163,7 @@ namespace RecipeApp
 
         private void btnFilterRecipes_Click(object sender, RoutedEventArgs e)
         {
-            string filterIngredient = txtFilterIngredient.Text;
+            string filterIngredient = txtFilterIngredient.Text == "Ingredient Name" ? string.Empty : txtFilterIngredient.Text;
             string filterFoodGroup = (cmbFilterFoodGroup.SelectedItem as ComboBoxItem)?.Content.ToString();
             double maxCalories = double.TryParse(txtFilterMaxCalories.Text, out double mc) ? mc : double.MaxValue;
 
@@ -172,33 +171,13 @@ namespace RecipeApp
 
             foreach (var recipe in recipes)
             {
-                bool matchesIngredientFilter = string.IsNullOrEmpty(filterIngredient);
-                bool matchesFoodGroupFilter = string.IsNullOrEmpty(filterFoodGroup);
+                bool matchesIngredientFilter = string.IsNullOrEmpty(filterIngredient) ||
+                    recipe.Ingredients.Any(ingredient => ingredient.Name.Contains(filterIngredient, StringComparison.OrdinalIgnoreCase));
+
+                bool matchesFoodGroupFilter = string.IsNullOrEmpty(filterFoodGroup) ||
+                    recipe.Ingredients.Any(ingredient => ingredient.FoodGroup.Equals(filterFoodGroup, StringComparison.OrdinalIgnoreCase));
+
                 bool matchesCalorieFilter = recipe.CalculateTotalCalories() <= maxCalories;
-
-                if (!matchesIngredientFilter)
-                {
-                    foreach (var ingredient in recipe.Ingredients)
-                    {
-                        if (ingredient.Name.Contains(filterIngredient, StringComparison.OrdinalIgnoreCase))
-                        {
-                            matchesIngredientFilter = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!matchesFoodGroupFilter)
-                {
-                    foreach (var ingredient in recipe.Ingredients)
-                    {
-                        if (ingredient.FoodGroup.Equals(filterFoodGroup, StringComparison.OrdinalIgnoreCase))
-                        {
-                            matchesFoodGroupFilter = true;
-                            break;
-                        }
-                    }
-                }
 
                 if (matchesIngredientFilter && matchesFoodGroupFilter && matchesCalorieFilter)
                 {
@@ -207,7 +186,7 @@ namespace RecipeApp
             }
 
             cmbRecipes.ItemsSource = filteredRecipes;
-            
+
             if (filteredRecipes.Count == 0)
             {
                 txtOutput.Text = "No recipes match the filter criteria.";
@@ -217,11 +196,10 @@ namespace RecipeApp
                 txtOutput.Clear();
                 foreach (var recipe in filteredRecipes)
                 {
-                    txtOutput.Text += recipe.Display();
+                    txtOutput.Text += recipe.Display() + Environment.NewLine;
                 }
             }
         }
-
 
         private void btnViewSteps_Click(object sender, RoutedEventArgs e)
         {
@@ -276,9 +254,10 @@ namespace RecipeApp
         // Additional method to check calories after scaling or adding a recipe
         private void CheckCalories(Recipe recipe)
         {
-            if (recipe.CalculateTotalCalories() > 300)
+            const double calorieLimit = 500.0; // Define a calorie limit for recipes
+            if (recipe.CalculateTotalCalories() > calorieLimit)
             {
-                MessageBox.Show($"The total calories of the recipe '{recipe.Name}' exceed 300. Total Calories: {recipe.CalculateTotalCalories()}", "Calories Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"The total calories of {recipe.Name} exceed the limit of {calorieLimit} calories.", "Calories Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }
