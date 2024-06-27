@@ -49,3 +49,19 @@ The Recipe App allows users to add, manage, and filter recipes based on various 
 - Include more detailed nutritional information for each ingredient (e.g., protein, fat, carbohydrates).
 - Calculate and display the overall nutritional profile for each recipe.
 - Ensure consistent and accurate calorie counting and display in the UI.
+
+//----------------------------------------------------------------------------------------REFERENCES--------------------------------------------------------------------------------------------
+//C# Tutorial (C Sharp). (n.d.). Retrieved May 27, 2024, from https://www.w3schools.com/cs/index.php 
+
+//Chand, M. (2023, April 2). How to create a list in C#? Retrieved May 28, 2024, from https://www.c-sharpcorner.com/UploadFile/mahesh/create-a-list-in-C-Sharp/
+
+//Sort a list alphabetically. (2021, February). Stack Overflow. Retrieved May 29, 2024, from https://stackoverflow.com/questions/6965337/sort-a-list-alphabetically
+
+//----------------------------------------------------------------------------------------New References--------------------------------------------------------------------------------------------
+
+//Adegeo. (2023, July 5).Create a new app with Visual Studio tutorial - WPF .NET. Microsoft Learn. https://learn.microsoft.com/en-us/dotnet/desktop/wpf/get-started/create-app-visual-studio?view=netdesktop-8.0
+
+//Welcome - The complete WPF tutorial. (n.d.). https://wpf-tutorial.com/
+//----------------------------------------------------------------------------------------REFERENCES--------------------------------------------------------------------------------------------
+
+
