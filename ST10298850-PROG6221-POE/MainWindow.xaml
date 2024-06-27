@@ -41,16 +41,18 @@
                 <ComboBoxItem Content="Dairy"/>
             </ComboBox>
             <TextBox Name="txtFilterMaxCalories" Width="200" Margin="5" ToolTip="Filter by Maximum Calories" GotFocus="txtFilterMaxCalories_GotFocus" LostFocus="txtFilterMaxCalories_LostFocus"/>
-            <Button Name="btnFilterRecipes" Content="Filter Recipes" Click="btnFilterRecipes_Click" Margin="5"
-                    Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
+            <Button Name="btnFilterRecipes" Content="Filter" Click="btnFilterRecipes_Click" 
+            Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
             <Button Name="btnViewSteps" Content="View Steps" Click="btnViewSteps_Click" Margin="5"
         Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
+            <Button Name="btnClearFilters" Content="Clear Filters" Click="btnClearFilters_Click" 
+        Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40" Margin="5"/>
 
         </StackPanel>
 
         <!-- System Feedback on the Right Side -->
         <StackPanel Grid.Column="1" Margin="10">
-            <TextBox Name="txtOutput" Margin="5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+            <TextBox Name="txtOutput" Margin="5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsReadOnly="True"
                      Background="White" Foreground="Black" BorderBrush="DarkGray" BorderThickness="1" Height="300"/>
             <TextBox Grid.Row="2" Name="txtSystemMessages" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
                      Background="LightGray" Foreground="Black" BorderBrush="DarkGray" BorderThickness="1"

@@ -30,7 +30,10 @@ namespace ST10298850_PROG6221_POE.Classes
         {
             Steps.Add(step);
         }
-
+        public override string ToString()
+        {
+            return Name;
+        }
         public void ScaleRecipe(double scaleFactor)
         {
             scaleAmount *= scaleFactor;
@@ -62,7 +65,7 @@ namespace ST10298850_PROG6221_POE.Classes
         public double CalculateTotalCalories()
         {
             // Adjusted to calculate total calories considering the scaleAmount
-            return Ingredients.Sum(ingredient => ingredient.Calories * ingredient.Quantity / ingredient.OriginalQuantity * scaleAmount);
+            return Ingredients.Sum(ingredient => ingredient.Calories * scaleAmount);
         }
 
         public string Display()
@@ -86,5 +89,6 @@ namespace ST10298850_PROG6221_POE.Classes
         }
 
         public event EventHandler? ExceededCalories;
+
     }
 }

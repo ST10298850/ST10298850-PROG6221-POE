@@ -85,7 +85,6 @@ namespace RecipeApp
             txtIngredientName.Clear();
             txtIngredientQuantity.Clear();
             txtIngredientCalories.Clear();
-            txtIngredientUnit.Clear();
             cmbFoodGroup.SelectedIndex = -1; // Reset the ComboBox selection
         }
     }
