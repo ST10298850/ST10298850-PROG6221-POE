@@ -40,7 +40,13 @@
 
         <!-- Unit -->
         <Label Grid.Row="3" Grid.Column="0" Content="Unit:" />
-        <TextBox x:Name="txtIngredientUnit" Grid.Row="3" Grid.Column="1" Margin="5" ToolTip="Enter the unit (e.g., grams, cups)"/>
+        <ComboBox x:Name="cmbIngredientUnit" Grid.Row="3" Grid.Column="1" Margin="5" ToolTip="Select the unit">
+            <ComboBoxItem Content="grams"/>
+            <ComboBoxItem Content="cups"/>
+            <ComboBoxItem Content="tablespoons"/>
+            <ComboBoxItem Content="teaspoons"/>
+            <ComboBoxItem Content="pieces"/>
+        </ComboBox>
 
         <!-- Calories -->
         <Label Grid.Row="4" Grid.Column="0" Content="Calories:" />

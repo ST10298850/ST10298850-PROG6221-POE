@@ -22,7 +22,9 @@ namespace RecipeApp
             var name = txtIngredientName.Text;
             var quantityText = txtIngredientQuantity.Text;
             var caloriesText = txtIngredientCalories.Text;
-            var unit = txtIngredientUnit.Text; // Assuming you have a TextBox for unit
+            //var unit = txtIngredientUnit.Text; // Assuming you have a TextBox for unit
+            var unit = ((ComboBoxItem)cmbIngredientUnit.SelectedItem)?.Content.ToString();
+
             var foodGroup = cmbFoodGroup.SelectedItem as ComboBoxItem; // Assuming you have a ComboBox for food group
 
             if (!string.IsNullOrWhiteSpace(name) &&

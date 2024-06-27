@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using ST10298850_PROG6221_POE;
 using ST10298850_PROG6221_POE.Classes;
 
 namespace RecipeApp
@@ -16,6 +19,12 @@ namespace RecipeApp
             InitializeComponent();
             PopulateSampleData();
             cmbRecipes.ItemsSource = recipes; // Bind the ComboBox to the ObservableCollection
+
+            // Initialize placeholders
+            txtFilterIngredient.Text = "Ingredient Name";
+            txtFilterIngredient.Foreground = new SolidColorBrush(Colors.Gray);
+            txtFilterMaxCalories.Text = "Max Calories";
+            txtFilterMaxCalories.Foreground = new SolidColorBrush(Colors.Gray);
         }
 
         private void btnScaleRecipe_Click(object sender, RoutedEventArgs e)
@@ -26,6 +35,7 @@ namespace RecipeApp
                 {
                     selectedRecipe.ScaleRecipe(scaleFactor);
                     RefreshUI(selectedRecipe); // Update UI with the scaled recipe
+                    CheckCalories(selectedRecipe); // Check if the scaled recipe exceeds calorie limit
                 }
                 else
                 {
@@ -61,6 +71,7 @@ namespace RecipeApp
             {
                 addRecipeWindow.NewRecipe.ExceededCalories += AddRecipeWindow_ExceededCalories;
                 recipes.Add(addRecipeWindow.NewRecipe);
+                CheckCalories(addRecipeWindow.NewRecipe); // Check if the new recipe exceeds calorie limit
             }
         }
 
@@ -83,7 +94,7 @@ namespace RecipeApp
             if (cmbRecipes.SelectedItem is Recipe selectedRecipe)
             {
                 selectedRecipe.ResetScale();
-                RefreshUI(selectedRecipe);
+                RefreshUI(selectedRecipe); // Update UI with the reset recipe
             }
         }
 
@@ -92,6 +103,89 @@ namespace RecipeApp
             if (cmbRecipes.SelectedItem is Recipe selectedRecipe)
             {
                 txtOutput.Text = selectedRecipe.Display();
+            }
+        }
+
+        private void btnFilterRecipes_Click(object sender, RoutedEventArgs e)
+        {
+            string filterIngredient = txtFilterIngredient.Text != "Ingredient Name" ? txtFilterIngredient.Text : string.Empty;
+            double maxCalories = double.TryParse(txtFilterMaxCalories.Text, out double mc) ? mc : double.MaxValue;
+
+            var filteredRecipes = recipes.Where(recipe =>
+                recipe.Ingredients.Any(ingredient => ingredient.Name.Contains(filterIngredient, StringComparison.OrdinalIgnoreCase)) &&
+                recipe.CalculateTotalCalories() <= maxCalories).ToList();
+
+            cmbRecipes.ItemsSource = filteredRecipes;
+
+            if (filteredRecipes.Count == 0)
+            {
+                txtOutput.Text = "No recipes match the filter criteria.";
+            }
+            else
+            {
+                txtOutput.Clear();
+                foreach (var recipe in filteredRecipes)
+                {
+                    txtOutput.Text += recipe.Display();
+                }
+            }
+        }
+        private void btnViewSteps_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbRecipes.SelectedItem is Recipe selectedRecipe)
+            {
+                RecipeDisplay recipedisplay = new RecipeDisplay(selectedRecipe);
+                recipedisplay.Show();
+            }
+            else
+            {
+                MessageBox.Show("Please select a recipe.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Placeholder simulation methods
+        private void txtFilterIngredient_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (txtFilterIngredient.Text == "Ingredient Name")
+            {
+                txtFilterIngredient.Text = "";
+                txtFilterIngredient.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
+
+        private void txtFilterIngredient_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtFilterIngredient.Text))
+            {
+                txtFilterIngredient.Text = "Ingredient Name";
+                txtFilterIngredient.Foreground = new SolidColorBrush(Colors.Gray);
+            }
+        }
+
+        private void txtFilterMaxCalories_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (txtFilterMaxCalories.Text == "Max Calories")
+            {
+                txtFilterMaxCalories.Text = "";
+                txtFilterMaxCalories.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
+
+        private void txtFilterMaxCalories_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtFilterMaxCalories.Text))
+            {
+                txtFilterMaxCalories.Text = "Max Calories";
+                txtFilterMaxCalories.Foreground = new SolidColorBrush(Colors.Gray);
+            }
+        }
+
+        // Additional method to check calories after scaling or adding a recipe
+        private void CheckCalories(Recipe recipe)
+        {
+            if (recipe.CalculateTotalCalories() > 300)
+            {
+                MessageBox.Show($"The total calories of the recipe '{recipe.Name}' exceed 300. Total Calories: {recipe.CalculateTotalCalories()}", "Calories Exceeded", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

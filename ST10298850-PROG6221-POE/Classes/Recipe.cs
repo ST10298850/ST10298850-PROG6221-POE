@@ -38,8 +38,7 @@ namespace ST10298850_PROG6221_POE.Classes
             {
                 ingredient.Scale(scaleFactor);
             }
-            CheckCalories(); // This will trigger the calorie check and potentially the ExceededCalories event if implemented.
-                             // Consider adding a method call here to explicitly update any UI or data bindings that display the total calories, if necessary.
+            CheckCalories();
         }
 
         public void ResetScale()
@@ -60,10 +59,10 @@ namespace ST10298850_PROG6221_POE.Classes
             }
         }
 
-        // Adjusted to calculate total calories without considering quantity
         public double CalculateTotalCalories()
         {
-            return Ingredients.Sum(ingredient => ingredient.Calories);
+            // Adjusted to calculate total calories considering the scaleAmount
+            return Ingredients.Sum(ingredient => ingredient.Calories * ingredient.Quantity / ingredient.OriginalQuantity * scaleAmount);
         }
 
         public string Display()

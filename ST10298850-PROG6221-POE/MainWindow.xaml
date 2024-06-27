@@ -6,18 +6,20 @@
         <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FF008C9E"/>
     </Window.Resources>
     <Grid Background="#F0F0F0">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10" HorizontalAlignment="Center">
+        <!-- Interactive Options and Buttons on the Left Side -->
+        <StackPanel Grid.Column="0" Margin="10">
             <Button Name="btnAddRecipe" Content="Add Recipe" Click="btnAddRecipe_Click" Margin="5"
                     Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
             <Button Name="btnDisplayRecipes" Content="Display Recipes" Click="btnDisplayRecipes_Click" Margin="5"
                     Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
-            <ComboBox Name="cmbRecipes" Width="200" DisplayMemberPath="Name" SelectionChanged="cmbRecipes_SelectionChanged" Margin="5"/>
+           <!--Updated combox box with recipe name to diaplay calorie infommation-->
+            <ComboBox Name="cmbRecipes" Width="200" SelectionChanged="cmbRecipes_SelectionChanged" Margin="5"/>
+           
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Scale Recipe:" VerticalAlignment="Center"/>
                 <ComboBox Name="cmbScaleFactor" Width="100" Margin="5">
@@ -30,15 +32,29 @@
             </StackPanel>
             <Button Name="btnResetScale" Content="Reset All Recipes" Click="btnResetScale_Click" Margin="5"
                     Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
+            <TextBox Name="txtFilterIngredient" Width="200" Margin="5" ToolTip="Filter by Ingredient Name" GotFocus="txtFilterIngredient_GotFocus" LostFocus="txtFilterIngredient_LostFocus"/>
+            <ComboBox Name="cmbFilterFoodGroup" Width="200" Margin="5" ToolTip="Filter by Food Group">
+                <ComboBoxItem Content="Fruits"/>
+                <ComboBoxItem Content="Vegetables"/>
+                <ComboBoxItem Content="Grains"/>
+                <ComboBoxItem Content="Protein Foods"/>
+                <ComboBoxItem Content="Dairy"/>
+            </ComboBox>
+            <TextBox Name="txtFilterMaxCalories" Width="200" Margin="5" ToolTip="Filter by Maximum Calories" GotFocus="txtFilterMaxCalories_GotFocus" LostFocus="txtFilterMaxCalories_LostFocus"/>
+            <Button Name="btnFilterRecipes" Content="Filter Recipes" Click="btnFilterRecipes_Click" Margin="5"
+                    Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
+            <Button Name="btnViewSteps" Content="View Steps" Click="btnViewSteps_Click" Margin="5"
+        Background="{StaticResource ButtonBackgroundBrush}" Foreground="White" Width="200" Height="40"/>
+
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Margin="10">
+        <!-- System Feedback on the Right Side -->
+        <StackPanel Grid.Column="1" Margin="10">
             <TextBox Name="txtOutput" Margin="5" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
                      Background="White" Foreground="Black" BorderBrush="DarkGray" BorderThickness="1" Height="300"/>
+            <TextBox Grid.Row="2" Name="txtSystemMessages" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                     Background="LightGray" Foreground="Black" BorderBrush="DarkGray" BorderThickness="1"
+                     Margin="10" Padding="5" Height="100"/>
         </StackPanel>
-
-        <TextBox Grid.Row="2" Name="txtSystemMessages" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
-                 Background="LightGray" Foreground="Black" BorderBrush="DarkGray" BorderThickness="1"
-                 Margin="10" Padding="5" Height="100"/>
     </Grid>
 </Window>
