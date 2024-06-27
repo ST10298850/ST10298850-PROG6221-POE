@@ -1,7 +1,3 @@
-Sure, here's the updated README file with the additional sections for coding standards, enhanced UI/UX, recipe categories, improvements on calorie counting, and coding standards.
-
----
-
 # Recipe App
 
 ## Introduction
